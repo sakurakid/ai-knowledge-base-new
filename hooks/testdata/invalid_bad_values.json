@@ -1,0 +1,13 @@
+{
+  "id": "github-2026-1",
+  "title": "Bad Values",
+  "source_url": "ftp://github.com/example/project",
+  "summary": "太短",
+  "tags": [],
+  "status": "done",
+  "score": 11,
+  "audience": "expert",
+  "analysis": {
+    "relevance_score": 0
+  }
+}

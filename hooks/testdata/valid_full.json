@@ -1,0 +1,13 @@
+{
+  "id": "github-20260317-001",
+  "title": "Open Agent Runtime",
+  "source_url": "https://github.com/example/open-agent-runtime",
+  "summary": "这是一个用于测试校验脚本的有效知识条目摘要，长度明显超过二十字。",
+  "tags": ["agent", "runtime"],
+  "status": "draft",
+  "score": 8,
+  "audience": "beginner",
+  "analysis": {
+    "relevance_score": 9
+  }
+}

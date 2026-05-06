@@ -1,0 +1,5 @@
+{
+  "id": "github-20260317-004",
+  "title": "Missing Required Fields",
+  "summary": "这个文件故意缺少 source_url、tags 和 status，用来测试必填字段错误。"
+}

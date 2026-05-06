@@ -1,0 +1,7 @@
+{
+  "id": "github-20260317-003",
+  "title": "Broken JSON",
+  "source_url": "https://github.com/example/broken",
+  "summary": "这个文件故意缺少结尾括号，用来测试 JSON 解析失败",
+  "tags": ["broken"],
+  "status": "draft"

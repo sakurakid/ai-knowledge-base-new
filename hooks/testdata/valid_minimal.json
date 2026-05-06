@@ -1,0 +1,8 @@
+{
+  "id": "hackernews-20260318-002",
+  "title": "LLM Evaluation Discussion",
+  "source_url": "https://news.ycombinator.com/item?id=123456",
+  "summary": "这是一条最小字段集合的有效知识条目，用来确认必填字段校验能够通过。",
+  "tags": ["llm"],
+  "status": "published"
+}
