@@ -50,7 +50,7 @@ def test_valid_single_file() -> None:
 
     require(exit_code == 0, "valid_full.json should pass")
     require("passed=1, failed=0" in stdout, "valid summary should be printed")
-    require(stderr == "", "valid run should not write stderr")
+    require("[INFO] Starting JSON validation" in stderr, "valid run should log start")
 
 
 def test_valid_glob() -> None:
@@ -60,7 +60,7 @@ def test_valid_glob() -> None:
 
     require(exit_code == 0, "valid glob should pass")
     require("total=2, passed=2, failed=0" in stdout, "glob summary mismatch")
-    require(stderr == "", "valid glob should not write stderr")
+    require("Expanded glob" in stderr, "valid glob should log expansion")
 
 
 def test_invalid_files() -> None:

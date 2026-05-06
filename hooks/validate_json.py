@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import sys
 from dataclasses import dataclass, field
@@ -14,6 +15,8 @@ from glob import glob
 from pathlib import Path
 from typing import Any
 
+
+LOGGER = logging.getLogger("validate_json")
 
 REQUIRED_FIELDS: dict[str, type] = {
     "id": str,
@@ -33,6 +36,16 @@ URL_PATTERN = re.compile(r"^https?://[^\s/$.?#].[^\s]*$")
 VALID_STATUSES = {"draft", "review", "published", "archived"}
 VALID_AUDIENCES = {"beginner", "intermed"}
 GLOB_CHARS = {"*", "?", "["}
+
+
+def configure_logging() -> None:
+    """Configure hook-friendly logging."""
+    logging.basicConfig(
+        format="[%(levelname)s] %(message)s",
+        level=logging.INFO,
+        stream=sys.stderr,
+        force=True,
+    )
 
 
 @dataclass
@@ -90,10 +103,12 @@ def expand_paths(args: list[str]) -> tuple[list[Path], list[str]]:
     errors: list[str] = []
 
     for arg in args:
+        LOGGER.info("Processing input argument: %s", arg)
         # PowerShell/cmd 不一定会帮我们展开 *.json，所以这里自己展开，
         # 这样 OpenCode hook 里写 knowledge/articles/*.json 也能稳定工作。
         if has_glob_chars(arg):
             matches = sorted(Path(match) for match in glob(arg))
+            LOGGER.info("Expanded glob %s to %d file(s)", arg, len(matches))
             if not matches:
                 errors.append(f"No files matched pattern: {arg}")
             paths.extend(matches)
@@ -124,6 +139,7 @@ def load_json(path: Path, result: ValidationResult) -> Any | None:
     Returns:
         Parsed JSON data, or None when parsing fails.
     """
+    LOGGER.info("Loading JSON file: %s", path.as_posix())
     try:
         # utf-8-sig accepts normal UTF-8 and UTF-8 with BOM, which is common
         # when JSON files are generated or edited on Windows.
@@ -288,6 +304,7 @@ def validate_file(path: Path) -> ValidationResult:
     Returns:
         Validation result with any collected errors.
     """
+    LOGGER.info("Validating file: %s", path.as_posix())
     # 每个文件都独立收集错误，不提前中断。这样一次 hook 能把所有问题列全。
     result = ValidationResult(path=path)
 
@@ -318,6 +335,15 @@ def validate_file(path: Path) -> ValidationResult:
     validate_summary(data.get("summary"), result)
     validate_tags(data.get("tags"), result)
     validate_optional_fields(data, result)
+
+    if result.is_valid:
+        LOGGER.info("Validation passed: %s", path.as_posix())
+    else:
+        LOGGER.info(
+            "Validation failed: %s, errors=%d",
+            path.as_posix(),
+            len(result.errors),
+        )
 
     return result
 
@@ -377,7 +403,11 @@ def main(argv: list[str]) -> int:
     Returns:
         Process exit code: 0 for success, 1 for validation failure.
     """
+    configure_logging()
+    LOGGER.info("Starting JSON validation: inputs=%d", len(argv))
+
     if not argv:
+        LOGGER.info("No input files provided")
         sys.stderr.write(
             "Usage: python hooks/validate_json.py <json_file> [json_file2 ...]\n"
         )
@@ -393,6 +423,12 @@ def main(argv: list[str]) -> int:
         results.append(result)
 
     summary = build_summary(results)
+    LOGGER.info(
+        "Validation summary: total=%d, passed=%d, failed=%d",
+        summary.total,
+        summary.passed,
+        summary.failed,
+    )
     output = format_results(results, summary)
     stream = sys.stdout if summary.failed == 0 else sys.stderr
     stream.write(output)

@@ -1,0 +1,10 @@
+{
+  "id": "github-20260317-010",
+  "title": "Agent Runtime Benchmark",
+  "source_url": "https://github.com/example/agent-runtime-benchmark",
+  "collected_at": "2026-03-17T10:00:00Z",
+  "summary": "这个项目围绕 LLM Agent runtime 的推理、工作流和 benchmark 做系统化评测，适合跟踪智能体工程落地质量。",
+  "tags": ["agent", "runtime", "benchmark"],
+  "status": "review",
+  "score": 9
+}

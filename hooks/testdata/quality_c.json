@@ -1,0 +1,9 @@
+{
+  "id": "bad-id",
+  "title": "强大的工具",
+  "source_url": "ftp://example.com/project",
+  "summary": "赋能闭环",
+  "tags": ["random", "too-many", "unknown", "misc"],
+  "status": "done",
+  "score": 1
+}
